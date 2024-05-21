@@ -35,7 +35,7 @@ public class Revenger extends NPC {
     }
 
     @Override
-    public void ability() {
+    public void ability(Object obj) {
         if (targetId == 0) return;
 
         double percentage = new Random().nextDouble();

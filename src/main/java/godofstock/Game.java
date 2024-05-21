@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class Game {
-    public static final int NUMBER_OF_PLAYERS = 5;
+    public static final int NUMBER_OF_PLAYERS = 4;
     public static final int LAST_DAY = 7;
 
     public static void main(String[] args) throws IOException {
@@ -88,7 +88,7 @@ public class Game {
             System.out.printf("""
                     ══════════════════
                     %s %d위 - %s
-                    최종 자산: %d
+                    최종 자산: %,d $
                     """, rank, i + 1, investors[i].getName(), investors[i].getBudget());
         }
 
@@ -106,7 +106,6 @@ public class Game {
         investors[1] = new Revenger();
         investors[2] = new Revenger("이지붐");
         investors[3] = new Revenger("제갈금수");
-        investors[4] = new Revenger("그린애플");
 
         return investors;
     }
@@ -132,7 +131,7 @@ public class Game {
 
         System.out.println("""
                 ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-                   이 게임은 4명의 NPC와 주식 투자 대결을 벌이는 게임입니다. 각 회사의 주가는 실제 주식과 무관하며 랜덤하게 배정됩니다. 플레이어와 각 NPC는 개인 능력을 가지고 시작합니다. 당신의 운과 실력을 시험해보세요!
+                   이 게임은 3명의 NPC와 주식 투자 대결을 벌이는 게임입니다. 각 회사의 주가는 실제 주식과 무관하며 랜덤하게 배정됩니다. 플레이어와 각 NPC는 개인 능력을 가지고 시작합니다. 당신의 운과 실력을 시험해보세요!
                 ╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝
                 """);
     }

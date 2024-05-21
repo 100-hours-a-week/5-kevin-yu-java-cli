@@ -2,6 +2,7 @@ package godofstock.investor;
 
 
 import godofstock.MessageConst;
+import godofstock.company.Company;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class Player extends Investor {
                               5. LG전자
                               6. 삼성전자
                         ╚═════════════════════╝""");
-                System.out.print(MessageConst.INPUT_COMPANY);
+                System.out.print("투자할 회사의 번호를 선택해주세요. >> ");
 
                 String userInput = br.readLine();
                 if (!userInput.matches("[0-9]*")) {
@@ -58,7 +59,8 @@ public class Player extends Investor {
     @Override
     public int investment() {
         while (true) {
-            System.out.print(MessageConst.INPUT_AMOUNT);
+            System.out.printf("현재 잔고: %,d $\n", getBudget());
+            System.out.print("투자할 금액을 입력해주세요. >> ");
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             try {
                 String userInput = br.readLine();
@@ -87,7 +89,38 @@ public class Player extends Investor {
     }
 
     @Override
-    public void ability() {
+    public void ability(Object obj) {
+        System.out.println("""
+                
+                ╔════════════════════════════════╗
+                             정보 구매
+                ╚════════════════════════════════╝
+                """);
 
+        System.out.println("1. 고급 정보상: 항상 올바른 정보만 알려줍니다. (비용: 3,000 $)");
+        System.out.println("2. 중급 정보상: 대부분 올바른 정보를 알려줍니다. 가끔 틀린 정보를 알려줍니다. (비용: 1,500 $)");
+        System.out.println("3. 초급 정보상: 보통 올바른 정보를 알려줍니다. 하지만 틀린 정보인 경우도 꽤 있습니다. (비용: 500 $)");
+        System.out.printf("현재 잔고: %,d $\n", getBudget());
+        System.out.print("원하는 정보상의 번호를 입력해주세요. >> ");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            while (true) {
+                String userInput = br.readLine();
+
+                if (userInput.matches("[123]")) {
+                    switch (userInput) {
+                        case "1" -> setBudget(getBudget() - 3000);
+                        case "2" -> setBudget(getBudget() - 1500);
+                        case "3" -> setBudget(getBudget() - 500);
+                    }
+                    Informant.getInformation((double[]) obj, userInput);
+                    break;
+                }
+                System.out.println(MessageConst.CAUTION_SELECT);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
