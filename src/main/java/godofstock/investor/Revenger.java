@@ -9,6 +9,9 @@ public class Revenger extends NPC {
     public Revenger() {
         setName("존 윅");
     }
+    public Revenger(String name) {
+        setName(name);
+    }
 
     @Override
     public int investment() {

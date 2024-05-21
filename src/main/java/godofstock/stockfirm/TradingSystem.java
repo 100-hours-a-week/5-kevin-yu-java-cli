@@ -1,6 +1,7 @@
 package godofstock.stockfirm;
 
 import godofstock.MessageConst;
+import godofstock.MessageTemplate;
 import godofstock.company.Company;
 import godofstock.company.MarketStatus;
 import godofstock.company.construction.ConstructionCompany;
@@ -114,15 +115,33 @@ public class TradingSystem {
     }
 
     private void monthlyInvestorReport() {
-        System.out.println("투자자별 월간 결산");
-        for (String name : tradeLogs.keySet()) {
+        System.out.println("""
+                
+                ╔════════════════════════════════╗
+                          투자자 월간 결산
+                ╚════════════════════════════════╝
+                """);
+
+        for (Investor investor : investors) {
+            String name = investor.getName();
+
+            System.out.println("═════════════════════════════════════════════════════════");
             int profit = tradeLogs.get(name)[day - 1];
-            System.out.println(name + ": " + String.format("%,d", profit));
+            System.out.printf("%s: %,d원%n", name, profit);
+            System.out.printf("현재 보유 자산: %s\n", String.format("%,d", investor.getBudget()));
         }
+        System.out.println("═════════════════════════════════════════════════════════");
     }
 
     private void monthlyCompanyReport(MarketStatus[] marketStatuses, double[] monthlyPerformance) {
-        System.out.println("기업별 월간 결산");
+        System.out.println("""
+                
+                ╔════════════════════════════════╗
+                            월간 시장 동향
+                ╚════════════════════════════════╝
+                """);
+
+        System.out.println("═════════════════════════════════════════════════════════════════");
         for (int i = 0; i < NUMBER_OF_MARKETS; i++) {
             String result = switch (marketStatuses[i]) {
                 case GREATE_BOOM -> "대호황";
@@ -133,17 +152,39 @@ public class TradingSystem {
             };
 
             switch (i) {
-                case CONSTRUCTION -> System.out.println("건설 업계는 금월 " + result + "을 겪었습니다.");
-                case IT -> System.out.println("IT 업계는 금월 " + result + "을 겪었습니다.");
-                case MANUFACTURE -> System.out.println("제조 업계는 금월 " + result + "을 겪었습니다.");
+                case CONSTRUCTION -> System.out.println("건설 업계는 금월 " + result + "입니다.");
+                case IT -> System.out.println("IT 업계는 금월 " + result + "입니다.");
+                case MANUFACTURE -> System.out.println("제조 업계는 금월 " + result + "입니다.");
             }
         }
+        System.out.println("══════════════════════════════════════════════════════════════\n");
 
         for (int i = 1; i <= NUMBER_OF_COMPANIES; i++) {
             String companyName = companies[i].getCompanyName();
             int profit = (int) (monthlyPerformance[i] * 100);
+            System.out.println("═════════════════════════════════════════════════════════════════");
             System.out.println(companyName + ": " + profit + "%");
+            System.out.println(makeEachCompaniesReport(marketStatuses, i, companyName, profit));
         }
+        System.out.println("═════════════════════════════════════════════════════════════════");
+    }
+
+    private String makeEachCompaniesReport(MarketStatus[] marketStatuses, int i, String companyName, int profit) {
+        String market;
+        MarketStatus marketStatus;
+
+        if (companies[i] instanceof ConstructionCompany) {
+            market = "건설 업계";
+            marketStatus = marketStatuses[CONSTRUCTION];
+        } else if (companies[i] instanceof ITCompany) {
+            market = "IT 업계";
+            marketStatus = marketStatuses[IT];
+        } else {
+            market = "제조 업계";
+            marketStatus = marketStatuses[MANUFACTURE];
+        }
+
+        return MessageTemplate.CompanyReportTemplate(market, marketStatus, companyName, profit);
     }
 
     private double[] getMonthlyPerformance(MarketStatus[] marketStatuses) {

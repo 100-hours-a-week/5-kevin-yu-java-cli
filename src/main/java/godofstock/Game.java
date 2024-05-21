@@ -26,7 +26,7 @@ public class Game {
                     ╚════════════════════════════════╝
                     """);
             System.out.println("1. 게임 시작");
-            System.out.println("2. 게임 기록 확인 (추가 예정)");
+            System.out.println("2. 게임 규칙 확인");
             System.out.println("3. 게임 종료");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -104,9 +104,9 @@ public class Game {
 
         investors[0] = new Player(userName);
         investors[1] = new Revenger();
-        investors[2] = new Revenger();
-        investors[3] = new Revenger();
-        investors[4] = new Revenger();
+        investors[2] = new Revenger("이지붐");
+        investors[3] = new Revenger("제갈금수");
+        investors[4] = new Revenger("그린애플");
 
         return investors;
     }
@@ -125,9 +125,9 @@ public class Game {
                   `8 8888       .8' `8 8888       ,8P  8 8888        ,88'           `8 8888       ,8P  8 8888                   8b   `8.`8888.       8 8888       `8 8888       ,8P  `8 8888       .8' 8 8888 `Y8.    \s
                      8888     ,88'   ` 8888     ,88'   8 8888    ,o88P'              ` 8888     ,88'   8 8888                   `8b.  ;8.`8888       8 8888        ` 8888     ,88'      8888     ,88'  8 8888   `Y8.  \s
                       `8888888P'        `8888888P'     8 888888888P'                    `8888888P'     8 8888                    `Y8888P ,88P'       8 8888           `8888888P'         `8888888P'    8 8888     `Y8.\s
-                               \s
-                               \s
-                               \s
+                \s
+                \s
+                \s
                 \s""");
 
         System.out.println("""
