@@ -26,5 +26,5 @@ public abstract class Investor {
 
     public abstract void balancingAccount(int money, int companyId);
 
-    public abstract void ability(Object obj);
+    public abstract void ability(double[] performances);
 }

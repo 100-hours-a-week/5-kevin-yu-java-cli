@@ -89,35 +89,39 @@ public class Player extends Investor {
     }
 
     @Override
-    public void ability(Object obj) {
-        System.out.println("""
-                
-                ╔════════════════════════════════╗
-                             정보 구매
-                ╚════════════════════════════════╝
-                """);
-
-        System.out.println("1. 고급 정보상: 항상 올바른 정보만 알려줍니다. (비용: 3,000 $)");
-        System.out.println("2. 중급 정보상: 대부분 올바른 정보를 알려줍니다. 가끔 틀린 정보를 알려줍니다. (비용: 1,500 $)");
-        System.out.println("3. 초급 정보상: 보통 올바른 정보를 알려줍니다. 하지만 틀린 정보인 경우도 꽤 있습니다. (비용: 500 $)");
-        System.out.printf("현재 잔고: %,d $\n", getBudget());
-        System.out.print("원하는 정보상의 번호를 입력해주세요. >> ");
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public void ability(double[] performances) {
         try {
             while (true) {
+                System.out.println("""
+                        
+                        ╔════════════════════════════════╗
+                                     정보 구매
+                        ╚════════════════════════════════╝
+                        """);
+
+                System.out.println("1. 고급 정보상: 항상 올바른 정보만 알려줍니다. (비용: 3,000 $)");
+                System.out.println("2. 중급 정보상: 대부분 올바른 정보를 알려줍니다. 가끔 틀린 정보를 알려줍니다. (비용: 1,500 $)");
+                System.out.println("3. 초급 정보상: 보통 올바른 정보를 알려줍니다. 하지만 틀린 정보인 경우도 꽤 있습니다. (비용: 500 $)");
+                System.out.println("4. 나가기");
+                System.out.printf("현재 잔고: %,d $\n", getBudget());
+                System.out.print("원하는 정보상의 번호를 입력해주세요. >> ");
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
                 String userInput = br.readLine();
 
-                if (userInput.matches("[123]")) {
-                    switch (userInput) {
-                        case "1" -> setBudget(getBudget() - 3000);
-                        case "2" -> setBudget(getBudget() - 1500);
-                        case "3" -> setBudget(getBudget() - 500);
-                    }
-                    Informant.getInformation((double[]) obj, userInput);
-                    break;
+                if (!userInput.matches("[1234]")) {
+                    System.out.println(MessageConst.CAUTION_SELECT);
+                    continue;
                 }
-                System.out.println(MessageConst.CAUTION_SELECT);
+
+                if (userInput.equals("4")) break;
+
+                switch (userInput) {
+                    case "1" -> setBudget(getBudget() - 3000);
+                    case "2" -> setBudget(getBudget() - 1500);
+                    case "3" -> setBudget(getBudget() - 500);
+                }
+                Informant.getInformation(performances, userInput);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
