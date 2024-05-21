@@ -23,6 +23,7 @@ public class Player extends Investor {
         try {
             while (true) {
                 System.out.println("""
+                        
                         ╔═════════════════════╗
                                 회사 목록
                         ╠═════════════════════╣
@@ -32,8 +33,7 @@ public class Player extends Investor {
                               4. 네이버
                               5. LG전자
                               6. 삼성전자
-                        ╚═════════════════════╝
-                        """);
+                        ╚═════════════════════╝""");
                 System.out.print(MessageConst.INPUT_COMPANY);
 
                 String userInput = br.readLine();

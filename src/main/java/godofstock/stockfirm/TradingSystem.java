@@ -1,5 +1,6 @@
 package godofstock.stockfirm;
 
+import godofstock.MessageConst;
 import godofstock.company.Company;
 import godofstock.company.MarketStatus;
 import godofstock.company.construction.ConstructionCompany;
@@ -11,10 +12,14 @@ import godofstock.company.it.Naver;
 import godofstock.company.manufacture.LG;
 import godofstock.company.manufacture.Samsung;
 import godofstock.investor.Investor;
+import godofstock.investor.Player;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.LinkedList;
 
+import static godofstock.Game.LAST_DAY;
 import static godofstock.company.Company.*;
 
 
@@ -23,7 +28,7 @@ public class TradingSystem {
 
     private final Company[] companies = new Company[NUMBER_OF_COMPANIES + 1];
     private final Investor[] investors;
-    private final HashMap<String, LinkedList<Integer>> tradeLogs = new HashMap<>();
+    private final HashMap<String, int[]> tradeLogs = new HashMap<>();
 
     public TradingSystem(Investor[] investors) {
         this.investors = investors;
@@ -42,7 +47,7 @@ public class TradingSystem {
 
     private void initTradeLogs(Investor[] investors) {
         for (Investor investor : investors) {
-            tradeLogs.put(investor.getName(), new LinkedList<>());
+            tradeLogs.put(investor.getName(), new int[LAST_DAY]);
         }
     }
 
@@ -55,20 +60,51 @@ public class TradingSystem {
         double[] monthlyPerformance = getMonthlyPerformance(marketStatuses);
 
         for (Investor investor : investors) {
-            // 투자자 고유 능력 사용 - Player는 선택, NPC는 무조건 사용
-            investor.ability();
-            // 투자할 회사 선택
-            int companyId = investor.choiceCompany();
-            // 투자할 금액 선택
-            int investmentAmount = investor.investment();
-            // 수익률 계산식: 회사 수익율 * 투자 금액
-            // 회사 수익률: 1 + 회사 실적 + 시장 현황
-            double performanceScore = 1 + monthlyPerformance[companyId];
-            int investmentResult = (int) (performanceScore * investmentAmount);
-            // 투자자 수익률 반영
-            investor.balancingAccount(investmentResult, companyId);
-            // 투자자 수익률 기록
-            tradeLogs.get(investor.getName()).add(investmentResult - investmentAmount);
+            while (true) {
+                boolean isPlayer = investor instanceof Player;
+                String userInput = null;
+                if (isPlayer) {
+                    try {
+                        System.out.println("═════════════ 취할 행동을 선택해주세요. ═════════════");
+                        System.out.println("  1. 개인 능력 사용");
+                        System.out.println("  2. 투자할 회사 선택");
+                        System.out.println("  3. 넘어가기");
+                        System.out.println("═════════════════════════════════════════════════");
+                        System.out.print("숫자만 입력해주세요. >> ");
+
+                        userInput = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                        if (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3")) {
+                            System.out.println(MessageConst.CAUTION_SELECT);
+                            continue;
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                // 투자자 고유 능력 사용 - Player는 선택, NPC는 무조건 사용
+                if (!isPlayer || "1".equals(userInput)) {
+                    investor.ability();
+
+                    if (isPlayer) continue;
+                }
+
+                if (!isPlayer || "2".equals(userInput)) {
+                    // 투자할 회사 선택
+                    int companyId = investor.choiceCompany();
+                    // 투자할 금액 선택
+                    int investmentAmount = investor.investment();
+                    // 수익률 계산식: 회사 수익율 * 투자 금액
+                    // 회사 수익률: 1 + 회사 실적 + 시장 현황
+                    double performanceScore = 1 + monthlyPerformance[companyId];
+                    int investmentResult = (int) (performanceScore * investmentAmount);
+                    // 투자자 수익률 반영
+                    investor.balancingAccount(investmentResult, companyId);
+                    // 투자자 수익률 기록
+                    tradeLogs.get(investor.getName())[day - 1] = investmentResult - investmentAmount;
+                }
+                break;
+            }
         }
 
         monthlyCompanyReport(marketStatuses, monthlyPerformance);
@@ -80,7 +116,7 @@ public class TradingSystem {
     private void monthlyInvestorReport() {
         System.out.println("투자자별 월간 결산");
         for (String name : tradeLogs.keySet()) {
-            int profit = tradeLogs.get(name).get(day - 1);
+            int profit = tradeLogs.get(name)[day - 1];
             System.out.println(name + ": " + String.format("%,d", profit));
         }
     }

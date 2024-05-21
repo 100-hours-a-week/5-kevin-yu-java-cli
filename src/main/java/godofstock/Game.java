@@ -38,7 +38,7 @@ public class Game {
                 case "2" -> {}
                 case "3" -> loop = false;
                 default -> {
-                    System.out.println("잘못된 입력입니다. 숫자만 입력해주세요.");
+                    System.out.println(MessageConst.CAUTION_SELECT);
                 }
             }
         }
@@ -61,9 +61,11 @@ public class Game {
 
         while (tradingSystem.getDay() <= LAST_DAY) {
             System.out.printf("""
+                    
                     ╔════════════════════════════════╗
                                  🌤 DAY %d
                     ╚════════════════════════════════╝
+                    
                     """, tradingSystem.getDay());
             tradingSystem.trade();
         }
