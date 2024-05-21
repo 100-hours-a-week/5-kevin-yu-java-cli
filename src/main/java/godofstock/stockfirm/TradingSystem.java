@@ -12,8 +12,7 @@ import godofstock.company.it.Kakao;
 import godofstock.company.it.Naver;
 import godofstock.company.manufacture.LG;
 import godofstock.company.manufacture.Samsung;
-import godofstock.investor.Investor;
-import godofstock.investor.Player;
+import godofstock.investor.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,6 +59,13 @@ public class TradingSystem {
         MarketStatus[] marketStatuses = getMarketStatuses();
         double[] monthlyPerformance = getMonthlyPerformance(marketStatuses);
 
+        // NPC의 능력은 수익률에 영향을 주기 때문에 미리 처리
+        for (Investor investor : investors) {
+            if (!(investor instanceof Player)) {
+                manageAbility(investor, monthlyPerformance);
+            }
+        }
+
         for (Investor investor : investors) {
             while (true) {
                 boolean isPlayer = investor instanceof Player;
@@ -74,7 +80,7 @@ public class TradingSystem {
                         System.out.print("숫자만 입력해주세요. >> ");
 
                         userInput = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                        if (!userInput.equals("1") && !userInput.equals("2") && !userInput.equals("3")) {
+                        if (!userInput.matches("[123]")) {
                             System.out.println(MessageConst.CAUTION_SELECT);
                             continue;
                         }
@@ -83,11 +89,10 @@ public class TradingSystem {
                     }
                 }
 
-                // 투자자 고유 능력 사용 - Player는 선택, NPC는 무조건 사용
-                if (!isPlayer || "1".equals(userInput)) {
-                    investor.ability();
-
-                    if (isPlayer) continue;
+                // 사용자 개인 능력 사용
+                if (isPlayer && "1".equals(userInput)) {
+                    manageAbility(investor, monthlyPerformance);
+                    continue;
                 }
 
                 if (!isPlayer || "2".equals(userInput)) {
@@ -127,8 +132,8 @@ public class TradingSystem {
 
             System.out.println("═════════════════════════════════════════════════════════");
             int profit = tradeLogs.get(name)[day - 1];
-            System.out.printf("%s: %,d원%n", name, profit);
-            System.out.printf("현재 보유 자산: %s\n", String.format("%,d", investor.getBudget()));
+            System.out.printf("%s: %,d $\n", name, profit);
+            System.out.printf("현재 보유 자산: %,d $\n", investor.getBudget());
         }
         System.out.println("═════════════════════════════════════════════════════════");
     }
@@ -185,6 +190,18 @@ public class TradingSystem {
         }
 
         return MessageTemplate.CompanyReportTemplate(market, marketStatus, companyName, profit);
+    }
+
+    private void manageAbility(Investor investor, double[] monthlyPerformance) {
+        if (investor instanceof Player) {
+            investor.ability(monthlyPerformance);
+        } else if (investor instanceof Revenger) {
+            investor.ability(monthlyPerformance);
+        } else if (investor instanceof CEO) {
+            investor.ability(monthlyPerformance);
+        } else if (investor instanceof CoinTrader) {
+            investor.ability(null); // 해당 능력은 수익률 차트가 필요없다.
+        }
     }
 
     private double[] getMonthlyPerformance(MarketStatus[] marketStatuses) {

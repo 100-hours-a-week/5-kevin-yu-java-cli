@@ -24,20 +24,20 @@ public class MessageTemplate {
                     sb.append("의 호황 덕분에, ").append(COMMON);
                 } else if (performance >= -20.0) {
                     sb.append("의 호황에도 불구하고, ").append(BAD);
-                } else if (performance >= -50.0) {
+                } else  {
                     sb.append("의 호황에도 불구하고, ").append(WORSE);
                 }
             }
             case NORMAL -> {
                 if (performance >= 50.0) {
-                    sb.append("가 무난한 시기임에도, ").append(GREAT);
+                    sb.append("가 평이한 와중에, ").append(GREAT);
                 } else if (performance >= 20.0) {
-                    sb.append("가 무난한 시기임에도, ").append(GOOD);
+                    sb.append("가 평이한 와중에, ").append(GOOD);
                 } else if (performance >= 0.0) {
                     sb.append("가 무난한 시기를 보냄에 따라, ").append(COMMON);
                 } else if (performance >= -20.0) {
                     sb.append("가 평이했음에도 불구하고, ").append(BAD);
-                } else if (performance >= -50.0) {
+                } else {
                     sb.append("가 평이했음에도 불구하고, ").append(WORSE);
                 }
             }
@@ -50,7 +50,7 @@ public class MessageTemplate {
                     sb.append("의 불황에도, 다행히 ").append(COMMON);
                 } else if (performance >= -20.0) {
                     sb.append("의 불황으로 인해, ").append(BAD);
-                } else if (performance >= -50.0) {
+                } else {
                     sb.append("의 불황으로 인해, ").append(WORSE);
                 }
             }
