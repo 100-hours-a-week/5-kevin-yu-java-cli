@@ -1,8 +1,8 @@
-package godofstock.investor;
+package godofstock.investor.player;
 
 
 import godofstock.MessageConst;
-import godofstock.company.Company;
+import godofstock.investor.Investor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

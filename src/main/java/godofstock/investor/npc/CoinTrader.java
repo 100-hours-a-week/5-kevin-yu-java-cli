@@ -1,4 +1,4 @@
-package godofstock.investor;
+package godofstock.investor.npc;
 
 import java.util.Random;
 
