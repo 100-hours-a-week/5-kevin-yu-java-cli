@@ -12,10 +12,7 @@ import godofstock.company.it.Kakao;
 import godofstock.company.it.Naver;
 import godofstock.company.manufacture.LG;
 import godofstock.company.manufacture.Samsung;
-import godofstock.investor.npc.CEO;
-import godofstock.investor.npc.CoinTrader;
 import godofstock.investor.Investor;
-import godofstock.investor.npc.Revenger;
 import godofstock.investor.player.Player;
 
 import java.io.BufferedReader;
@@ -66,7 +63,7 @@ public class TradingSystem {
         // NPC의 능력은 수익률에 영향을 주기 때문에 미리 처리
         for (Investor investor : investors) {
             if (!(investor instanceof Player)) {
-                manageAbility(investor, monthlyPerformance);
+                investor.ability(monthlyPerformance);
             }
         }
 
@@ -95,7 +92,7 @@ public class TradingSystem {
 
                 // 사용자 개인 능력 사용
                 if (isPlayer && "1".equals(userInput)) {
-                    manageAbility(investor, monthlyPerformance);
+                    investor.ability(monthlyPerformance);
                     continue;
                 }
 
@@ -153,7 +150,7 @@ public class TradingSystem {
         System.out.println("═════════════════════════════════════════════════════════════════");
         for (int i = 0; i < NUMBER_OF_MARKETS; i++) {
             String result = switch (marketStatuses[i]) {
-                case GREATE_BOOM -> "대호황";
+                case GREAT_BOOM -> "대호황";
                 case BOOM -> "호황";
                 case NORMAL -> "일반적인 시기";
                 case DEPRESSION -> "불황";
@@ -196,30 +193,19 @@ public class TradingSystem {
         return MessageTemplate.companyReportTemplate(market, marketStatus, companyName, profit);
     }
 
-    private void manageAbility(Investor investor, double[] monthlyPerformance) {
-        if (investor instanceof Player) {
-            investor.ability(monthlyPerformance);
-        } else if (investor instanceof Revenger) {
-            investor.ability(monthlyPerformance);
-        } else if (investor instanceof CEO) {
-            investor.ability(monthlyPerformance);
-        } else if (investor instanceof CoinTrader) {
-            investor.ability(null); // 해당 능력은 수익률 차트가 필요없다.
-        }
-    }
-
     private double[] getMonthlyPerformance(MarketStatus[] marketStatuses) {
         double[] monthlyPerformance = new double[NUMBER_OF_COMPANIES + 1];
         for (int i = 1; i <= NUMBER_OF_COMPANIES; i++) {
             Company company = companies[i];
             MarketStatus marketStatus;
 
-            if (company instanceof ConstructionCompany)
+            if (company instanceof ConstructionCompany) {
                 marketStatus = marketStatuses[CONSTRUCTION];
-            else if (company instanceof ITCompany)
+            } else if (company instanceof ITCompany) {
                 marketStatus = marketStatuses[IT];
-            else
+            } else {
                 marketStatus = marketStatuses[MANUFACTURE];
+            }
 
             monthlyPerformance[i] = company.performance(marketStatus);
         }
