@@ -9,7 +9,8 @@ public class MessageTemplate {
     private static final String BAD = "적자를 기록했습니다.";
     private static final String WORSE = "엄청난 손해를 입었습니다.";
 
-    public static String CompanyReportTemplate(String market, MarketStatus marketStatus, String companyName, double performance) {
+    // 각 회사별 월간 기록을
+    public static String companyReportTemplate(String market, MarketStatus marketStatus, String companyName, double performance) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(companyName).append("은(는) ").append(market);
@@ -24,7 +25,7 @@ public class MessageTemplate {
                     sb.append("의 호황 덕분에, ").append(COMMON);
                 } else if (performance >= -20.0) {
                     sb.append("의 호황에도 불구하고, ").append(BAD);
-                } else  {
+                } else {
                     sb.append("의 호황에도 불구하고, ").append(WORSE);
                 }
             }

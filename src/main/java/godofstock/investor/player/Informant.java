@@ -1,4 +1,4 @@
-package godofstock.investor;
+package godofstock.investor.player;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,6 +1,10 @@
 package godofstock;
 
-import godofstock.investor.*;
+import godofstock.investor.npc.CEO;
+import godofstock.investor.npc.CoinTrader;
+import godofstock.investor.Investor;
+import godofstock.investor.npc.Revenger;
+import godofstock.investor.player.Player;
 import godofstock.stockfirm.TradingSystem;
 
 import java.io.BufferedReader;
@@ -24,7 +28,7 @@ public class Game {
                     ╚════════════════════════════════╝
                     """);
             System.out.println("1. 게임 시작");
-            System.out.println("2. 게임 규칙 확인");
+            System.out.println("2. 게임 설명");
             System.out.println("3. 게임 종료");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -61,7 +65,7 @@ public class Game {
             System.out.printf("""
                     
                     ╔════════════════════════════════╗
-                                 🌤 Turn %d
+                                🌤 Turn %d
                     ╚════════════════════════════════╝
                     
                     """, tradingSystem.getDay());
@@ -103,13 +107,13 @@ public class Game {
                 #######   #####   ##  ##    #####   ##   ##  ##   ##      ##    #####    ######  ##   ##      ##    ######   #####   ##  ##     ###   \s
                 """);
             System.out.println("""
-                ##   ##   #####   ##   ##           ##  ##  ##  ######  ##  ##      ##   \s
-                ##   ##  #######  ##   ##           ##  ##  ##  ######  ### ##      ##   \s
-                ##   ##  ##   ##  ##   ##           ##  ##  ##    ##    ######     ###   \s
-                #######  ##   ##  ##   ##           ##  ##  ##    ##    ######     ###   \s
-                  ###    ##   ##  ##   ##           ##  ##  ##    ##    ## ###     ###   \s
-                  ###    #######  #######           ##  ##  ##  ######  ##  ##           \s
-                  ###     #####    #####             ########   ######  ##  ##     ###   \s
+                ##   ##   #####   ##   ##          ##  ##  ##  ######  ##  ##      ##   \s
+                ##   ##  #######  ##   ##          ##  ##  ##  ######  ### ##      ##   \s
+                ##   ##  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
+                #######  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
+                  ###    ##   ##  ##   ##          ##  ##  ##    ##    ## ###     ###   \s
+                  ###    #######  #######          ##  ##  ##  ######  ##  ##           \s
+                  ###     #####    #####            ########   ######  ##  ##     ###   \s
                 """);
         }
     }

@@ -12,7 +12,11 @@ import godofstock.company.it.Kakao;
 import godofstock.company.it.Naver;
 import godofstock.company.manufacture.LG;
 import godofstock.company.manufacture.Samsung;
-import godofstock.investor.*;
+import godofstock.investor.npc.CEO;
+import godofstock.investor.npc.CoinTrader;
+import godofstock.investor.Investor;
+import godofstock.investor.npc.Revenger;
+import godofstock.investor.player.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -189,7 +193,7 @@ public class TradingSystem {
             marketStatus = marketStatuses[MANUFACTURE];
         }
 
-        return MessageTemplate.CompanyReportTemplate(market, marketStatus, companyName, profit);
+        return MessageTemplate.companyReportTemplate(market, marketStatus, companyName, profit);
     }
 
     private void manageAbility(Investor investor, double[] monthlyPerformance) {
