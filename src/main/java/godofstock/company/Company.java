@@ -25,7 +25,7 @@ public interface Company {
 
     static MarketStatus marketStatus() {
         return switch (new Random().nextInt(10) + 1) {
-            case 1 -> GREATE_BOOM;
+            case 1 -> GREAT_BOOM;
             case 2, 3 -> BOOM;
             case 4, 5, 6, 7 -> NORMAL;
             case 8, 9 -> DEPRESSION;

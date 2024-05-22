@@ -1,7 +1,7 @@
 package godofstock.company;
 
 public enum MarketStatus {
-    GREATE_BOOM,
+    GREAT_BOOM,
     BOOM,
     NORMAL,
     DEPRESSION,

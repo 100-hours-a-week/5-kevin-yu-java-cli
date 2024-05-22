@@ -7,7 +7,7 @@ public abstract class ConstructionCompany implements Company {
     @Override
     public double performance(MarketStatus marketStatus) {
         double marketPerformance = switch (marketStatus) {
-            case GREATE_BOOM -> 0.2;
+            case GREAT_BOOM -> 0.2;
             case BOOM -> 0.1;
             case DEPRESSION -> -0.1;
             case GREAT_DEPRESSION -> -0.2;

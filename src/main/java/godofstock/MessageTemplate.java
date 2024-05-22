@@ -9,14 +9,13 @@ public class MessageTemplate {
     private static final String BAD = "적자를 기록했습니다.";
     private static final String WORSE = "엄청난 손해를 입었습니다.";
 
-    // 각 회사별 월간 기록을
     public static String companyReportTemplate(String market, MarketStatus marketStatus, String companyName, double performance) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(companyName).append("은(는) ").append(market);
 
         switch (marketStatus) {
-            case GREATE_BOOM, BOOM -> {
+            case GREAT_BOOM, BOOM -> {
                 if (performance >= 50.0) {
                     sb.append("의 호황에 힙입어, ").append(GREAT);
                 } else if (performance >= 20.0) {
