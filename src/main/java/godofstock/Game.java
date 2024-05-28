@@ -20,6 +20,10 @@ public class Game {
     public static void main(String[] args) throws IOException {
         printTitle();
 
+        MusicPlayer musicPlayer = new MusicPlayer();
+        Thread musicThread = new Thread(musicPlayer);
+        musicThread.setDaemon(true);
+        musicThread.start();
         boolean loop = true;
         while (loop) {
             System.out.println("""
@@ -29,7 +33,8 @@ public class Game {
                     """);
             System.out.println("1. 게임 시작");
             System.out.println("2. 게임 설명");
-            System.out.println("3. 게임 종료");
+            System.out.println("3. 음악 설정");
+            System.out.println("4. 게임 종료");
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             System.out.print("숫자만 입력해주세요. >> ");
@@ -38,7 +43,8 @@ public class Game {
             switch (userInput) {
                 case "1" -> startGame();
                 case "2" -> printExplain();
-                case "3" -> loop = false;
+                case "3" -> settingSound(musicPlayer, musicThread);
+                case "4" -> loop = false;
                 default -> {
                     System.out.println(MessageConst.CAUTION_SELECT);
                 }
@@ -57,17 +63,54 @@ public class Game {
                 """);
     }
 
+    private static void settingSound(MusicPlayer musicPlayer, Thread musicThread) throws IOException {
+        System.out.println("""
+                ╔════════════════════════════════╗
+                              소리 설정
+                ╚════════════════════════════════╝
+                """);
+
+        boolean loop = true;
+        while (loop) {
+            System.out.println("1. 소리 켜기");
+            System.out.println("2. 소리 끄기");
+            System.out.println("3. 볼륨 올리기");
+            System.out.println("4. 볼륨 내리기");
+            System.out.println("5. 나가기");
+            System.out.print(">> ");
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String input = br.readLine();
+
+            switch (input) {
+                case "1" -> {
+                    if (!musicThread.isAlive()) {
+                        musicThread = new Thread(musicPlayer);
+                        musicThread.setDaemon(true);
+                        musicThread.start();
+                    } else {
+                        System.out.println("이미 음악이 재생되고 있습니다.");
+                    }
+                }
+                case "2" -> musicPlayer.stop();
+                case "3" -> musicPlayer.volumeUp();
+                case "4" -> musicPlayer.volumeDown();
+                case "5" -> loop = false;
+                default -> System.out.println(MessageConst.CAUTION_SELECT);
+            }
+        }
+    }
+
     private static void startGame() throws IOException {
         Investor[] investors = initInvestors();
         TradingSystem tradingSystem = new TradingSystem(investors);
 
         while (tradingSystem.getDay() <= LAST_DAY) {
             System.out.printf("""
-                    
+                                        
                     ╔════════════════════════════════╗
                                 🌤 Turn %d
                     ╚════════════════════════════════╝
-                    
+                                        
                     """, tradingSystem.getDay());
             tradingSystem.trade();
         }
@@ -98,23 +141,23 @@ public class Game {
 
         if (investors[0] instanceof Player) {
             System.out.println("""
-                #######   #####   ##  ##    #####   ######       ##   #######  ##   ##  ##           ##   #######   ######   #####   ##  ##   #####   \s
-                ##   ##  #######  ### ##   #######  #######    #####  #######  ##   ##  ##         #####  #######   ######  #######  ### ##    ####   \s
-                ##       ##   ##  ######   ##            ##    ## ##      ##   ##   ##  ##         ## ##      ##      ##    ##   ##  ######    ####   \s
-                ##       ##   ##  ######   ##  ###  ######    ##  ##      ##   ##   ##  ##        ##  ##      ##      ##    ##   ##  ######     ###   \s
-                ##       ##   ##  ## ###   ##   ##  ##   ##   ######      ##   ##   ##  ##        ######      ##      ##    ##   ##  ## ###     ###   \s
-                ##   ##  #######  ##  ##   #######  ##   ##  ##   ##      ##   #######  #######  ##   ##      ##    ######  #######  ##  ##           \s
-                #######   #####   ##  ##    #####   ##   ##  ##   ##      ##    #####    ######  ##   ##      ##    ######   #####   ##  ##     ###   \s
-                """);
+                    #######   #####   ##  ##    #####   ######       ##   #######  ##   ##  ##           ##   #######   ######   #####   ##  ##   #####   \s
+                    ##   ##  #######  ### ##   #######  #######    #####  #######  ##   ##  ##         #####  #######   ######  #######  ### ##    ####   \s
+                    ##       ##   ##  ######   ##            ##    ## ##      ##   ##   ##  ##         ## ##      ##      ##    ##   ##  ######    ####   \s
+                    ##       ##   ##  ######   ##  ###  ######    ##  ##      ##   ##   ##  ##        ##  ##      ##      ##    ##   ##  ######     ###   \s
+                    ##       ##   ##  ## ###   ##   ##  ##   ##   ######      ##   ##   ##  ##        ######      ##      ##    ##   ##  ## ###     ###   \s
+                    ##   ##  #######  ##  ##   #######  ##   ##  ##   ##      ##   #######  #######  ##   ##      ##    ######  #######  ##  ##           \s
+                    #######   #####   ##  ##    #####   ##   ##  ##   ##      ##    #####    ######  ##   ##      ##    ######   #####   ##  ##     ###   \s
+                    """);
             System.out.println("""
-                ##   ##   #####   ##   ##          ##  ##  ##  ######  ##  ##      ##   \s
-                ##   ##  #######  ##   ##          ##  ##  ##  ######  ### ##      ##   \s
-                ##   ##  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
-                #######  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
-                  ###    ##   ##  ##   ##          ##  ##  ##    ##    ## ###     ###   \s
-                  ###    #######  #######          ##  ##  ##  ######  ##  ##           \s
-                  ###     #####    #####            ########   ######  ##  ##     ###   \s
-                """);
+                    ##   ##   #####   ##   ##          ##  ##  ##  ######  ##  ##      ##   \s
+                    ##   ##  #######  ##   ##          ##  ##  ##  ######  ### ##      ##   \s
+                    ##   ##  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
+                    #######  ##   ##  ##   ##          ##  ##  ##    ##    ######     ###   \s
+                      ###    ##   ##  ##   ##          ##  ##  ##    ##    ## ###     ###   \s
+                      ###    #######  #######          ##  ##  ##  ######  ##  ##           \s
+                      ###     #####    #####            ########   ######  ##  ##     ###   \s
+                    """);
         }
     }
 

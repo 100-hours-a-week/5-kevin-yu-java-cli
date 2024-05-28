@@ -14,7 +14,7 @@ public abstract class ConstructionCompany implements Company {
             default -> 0.0;
         };
         double companyPerformance = (Math.round((Math.random() - 0.5) * 10)) / 10.0;
-
+        
         return marketPerformance + companyPerformance;
     }
 }
