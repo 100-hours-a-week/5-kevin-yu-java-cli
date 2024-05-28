@@ -18,7 +18,9 @@ import godofstock.investor.player.Player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static godofstock.Game.LAST_DAY;
 import static godofstock.company.Company.*;
@@ -67,50 +69,64 @@ public class TradingSystem {
             }
         }
 
+        List<Thread> threads = new ArrayList<>();
         for (Investor investor : investors) {
-            while (true) {
-                boolean isPlayer = investor instanceof Player;
-                String userInput = null;
-                if (isPlayer) {
-                    try {
-                        System.out.println("═════════════ 취할 행동을 선택해주세요. ═════════════");
-                        System.out.println("  1. 개인 능력 사용");
-                        System.out.println("  2. 투자할 회사 선택");
-                        System.out.println("  3. 넘어가기");
-                        System.out.println("═════════════════════════════════════════════════");
-                        System.out.print("숫자만 입력해주세요. >> ");
+            Thread thread = new Thread(() -> {
+                while (true) {
+                    boolean isPlayer = investor instanceof Player;
+                    String userInput = null;
+                    if (isPlayer) {
+                        try {
+                            System.out.println("═════════════ 취할 행동을 선택해주세요. ═════════════");
+                            System.out.println("  1. 개인 능력 사용");
+                            System.out.println("  2. 투자할 회사 선택");
+                            System.out.println("  3. 넘어가기");
+                            System.out.println("═════════════════════════════════════════════════");
+                            System.out.print("숫자만 입력해주세요. >> ");
 
-                        userInput = new BufferedReader(new InputStreamReader(System.in)).readLine();
-                        if (!userInput.matches("[123]")) {
-                            System.out.println(MessageConst.CAUTION_SELECT);
-                            continue;
+                            userInput = new BufferedReader(new InputStreamReader(System.in)).readLine();
+                            if (!userInput.matches("[123]")) {
+                                System.out.println(MessageConst.CAUTION_SELECT);
+                                continue;
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
                     }
-                }
 
-                // 사용자 개인 능력 사용
-                if (isPlayer && "1".equals(userInput)) {
-                    investor.ability(monthlyPerformance);
-                    continue;
-                }
+                    // 사용자 개인 능력 사용
+                    if (isPlayer && "1".equals(userInput)) {
+                        investor.ability(monthlyPerformance);
+                        continue;
+                    }
 
-                if (!isPlayer || "2".equals(userInput)) {
-                    // 투자할 회사 선택
-                    int companyId = investor.choiceCompany();
-                    // 투자할 금액 선택
-                    int investmentAmount = investor.investment();
-                    // 수익률 계산식: 회사 수익율 * 투자 금액
-                    // 회사 수익률: 1 + 회사 실적 + 시장 현황
-                    double performanceScore = 1 + monthlyPerformance[companyId];
-                    int investmentResult = (int) (performanceScore * investmentAmount);
-                    // 투자자 수익률 반영
-                    investor.balancingAccount(investmentResult, companyId);
-                    // 투자자 수익률 기록
-                    tradeLogs.get(investor.getName())[day - 1] = investmentResult - investmentAmount;
+                    if (!isPlayer || "2".equals(userInput)) {
+                        // 투자할 회사 선택
+                        int companyId = investor.choiceCompany();
+                        // 투자할 금액 선택
+                        int investmentAmount = investor.investment();
+                        // 수익률 계산식: 회사 수익율 * 투자 금액
+                        // 회사 수익률: 1 + 회사 실적 + 시장 현황
+                        double performanceScore = 1 + monthlyPerformance[companyId];
+                        int investmentResult = (int) (performanceScore * investmentAmount);
+                        // 투자자 수익률 반영
+                        investor.balancingAccount(investmentResult, companyId);
+                        // 투자자 수익률 기록
+                        tradeLogs.get(investor.getName())[day - 1] = investmentResult - investmentAmount;
+                    }
+                    break;
                 }
-                break;
+            });
+
+            threads.add(thread);
+            thread.start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
 
