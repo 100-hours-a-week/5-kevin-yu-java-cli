@@ -106,11 +106,11 @@ public class Game {
 
         while (tradingSystem.getDay() <= LAST_DAY) {
             System.out.printf("""
-                                        
+                    
                     ╔════════════════════════════════╗
                                 🌤 Turn %d
                     ╚════════════════════════════════╝
-                                        
+                    
                     """, tradingSystem.getDay());
             tradingSystem.trade();
         }
